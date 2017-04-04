@@ -50,6 +50,7 @@ def check_happiness(matrix, x, y, radius, threshold):
     proportion = (sum_/((right-left+1)*(down-up+1)-1))
     
     if matrix[x][y] == 0:
+        sum_ += 1
         proportion = 1 - proportion
     
     if proportion > threshold:
