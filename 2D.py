@@ -15,7 +15,7 @@ threshold = 0.33
 
 def create_matrix(N, percent):
     number = np.floor((percent)*(N**2))
-    m = [[0 for i in range(5)] for j in range(5)]
+    m = [[0 for i in range(N)] for j in range(N)]
     to_turn_1 = np.random.choice(N**2, size=int(number), replace=False)
     for k in to_turn_1:
         m[k/N][k%N] = 1
