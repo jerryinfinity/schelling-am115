@@ -1,4 +1,17 @@
+"""
+Essam
+
+
+This is a quick sketch. NEEDS to be checked for potential bugs.
+
+"""
+
 import numpy as np
+
+N = 6
+percent = 0.6
+radius = 2
+threshold = 0.33
 
 def create_matrix(N, percent):
     number = np.floor((percent)*(N**2))
@@ -42,3 +55,6 @@ def check_happiness(matrix, x, y, radius, threshold):
     else:
         # sad
         return 0
+
+# make a list of all the unhappy people
+q = [(r, c) for r in range(N) for c in range(N) if check_happiness(m, r, c, radius, threshold) == 0]
