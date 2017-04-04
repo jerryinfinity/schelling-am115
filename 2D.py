@@ -43,8 +43,11 @@ def check_happiness(matrix, x, y, radius, threshold):
         
     for col in range(left, right + 1):
         sum_ += matrix[x][col]
+
+    # Subtract person's own value
+    sum_ -= 1
     
-    proportion = (sum_/((right-left+1)*(down-up+1)))
+    proportion = (sum_/((right-left+1)*(down-up+1)-1))
     
     if matrix[x][y] == 0:
         proportion = 1 - proportion
