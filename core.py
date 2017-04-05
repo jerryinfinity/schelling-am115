@@ -32,12 +32,12 @@ def pos_arr2int(posarr):
     return np.sum(np.array(posarr)*np.array([n**(d-1-i) for i in xrange(d)]))
 
 # input position pos is an integer, no neet to input grid since we only return indices
-def getneighbors(pos,topology="grid"):
+def getneighbors(pos,nhoodsize,topology="grid"):
     if topology == "grid":
         # this only works with d <= 10, but larger d is not computationally feasible anyways
         ans = []        
         posarr = pos_int2arr(pos)
-        offsets = itertools.product(*([range(-v,v+1)]*d))
+        offsets = itertools.product(*([range(-nhoodsize,nhoodsize+1)]*d))
         for offset in offsets:
             resarr = posarr + offset
             if (resarr >= 0).all() and (resarr <= n-1).all():
@@ -55,7 +55,7 @@ def ishappy(grid,pos):
     curr_type = grid[pos]
     if curr_type == 0:
         return True
-    neighbors = grid[getneighbors(pos)]
+    neighbors = grid[getneighbors(pos=pos,nhoodsize=v)]
     neighbors = neighbors[neighbors > 0]
     # alone = happy
     if len(neighbors) == 0:
