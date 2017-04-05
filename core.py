@@ -10,7 +10,7 @@ import itertools
 
 
 n = 8 # this is n, grid size (nxnx...xn), d times
-d = 2 # this is d, number of dimensions (d<=10) 
+d = 3 # this is d, number of dimensions (d<=10) 
 v = 1 # this is v Note: if v=1, then we care about 3x3 squares
 m = 2 # this is m, number of types; type 1,2,...,m
 popdist = np.array([0.6, 0.4]) # proportion of each type
@@ -21,7 +21,7 @@ lo_thres = np.matrix([[0.33,0.],[0.,0.33]])
 hi_thres = np.matrix([[1,1],[1,1]])
 
 # number of iterations
-num_iter = 100
+num_iter = 200
 
 
 # construct a grid
@@ -99,7 +99,9 @@ def printgrid(grid):
 
 
 def example():
-    # example, we track number of unhappy people, we get [10, 4, 1, 1, 1, 1, 1, 1, 1] 
+    # example, we track number of unhappy people
+    # with n=10,d=2,m=2,v=1,lo_thres=diag(0.33) i.e. want at least 1/3 own,hi_thres=all ones (not binding)
+    # we get [10, 4, 1, 1, 1, 1, 1, 1, 1] 
     # terminates in 9 steps
     # final result is
     #[[2 2 0 2 1 1 0 1]
@@ -128,10 +130,8 @@ def main():
     example()
 
 
-
-
 if __name__ == "__main__":
     main()
     
         
-printgrid(gridinit())
+
