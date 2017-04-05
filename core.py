@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Spyder Editor
-
-This is a temporary script file.
-"""
-
 import numpy as np
 import itertools
 
@@ -21,7 +14,7 @@ lo_thres = np.matrix([[0.33,0.],[0.,0.33]])
 hi_thres = np.matrix([[1,1],[1,1]])
 
 # number of iterations
-num_iter = 200
+max_iter = 200
 
 
 # construct a grid
@@ -115,7 +108,7 @@ def example():
     # which is completely segregated
     results = [gridinit()]
     unhappy_list = []
-    for cnt in xrange(num_iter):
+    for cnt in xrange(max_iter):
         oldgrid = results[cnt]
         num_unhappy, newgrid = movegrid(oldgrid)
         if num_unhappy > 0:
