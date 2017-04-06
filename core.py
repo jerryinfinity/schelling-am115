@@ -84,7 +84,24 @@ def movegrid(grid):
     # return number of unhappy people and new grid
     return (len(unhappy_indices), grid)
     
-
+def neighborhood_sizes(grid):
+    seen = set()
+    ret = {t: [] for t in xrange(m+1)}
+    while len(seen) != len(grid):
+        x = set(range(len(grid))) - seen        
+        queue = [list(x)[0]]
+        seen.add(queue[0])
+        nhood_size = 1
+        while len(queue) > 0:
+            ele = queue.pop()
+            for idx in getneighbors(ele, 1):
+                if (idx not in seen) and (grid[ele] == grid[idx]):
+                    seen.add(idx)
+                    queue.append(idx)
+                    nhood_size += 1
+        # add to dictionary
+        ret[grid[ele]].append(nhood_size)
+    return ret
 
 # print grid
 def printgrid(grid):
