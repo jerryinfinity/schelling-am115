@@ -7,7 +7,7 @@ d = 3 # this is d, number of dimensions (d<=10)
 v = 1 # this is v Note: if v=1, then we care about 3x3 squares
 m = 2 # this is m, number of types; type 1,2,...,m
 popdist = np.array([0.6, 0.4]) # proportion of each type
-rho = 0.7 # this is rho, population density
+rho = 0.8 # this is rho, population density
 
 # m x m matrices
 lo_thres = np.matrix([[0.33,0.],[0.,0.33]])
@@ -134,6 +134,29 @@ def example():
             cnt += 1
         else:
             break
+    print neighborhood_sizes(results[-1])
+
+def neighborhood_sizes(grid):
+    seen = set()
+    ret = {t: [] for t in xrange(m+1)}
+    while len(seen) != len(grid):
+        x = set(range(len(grid))) - seen        
+        queue = [list(x)[0]]
+        seen.add(queue[0])
+        nhood_size = 1
+        while len(queue) > 0:
+            ele = queue.pop()
+            for idx in getneighbors(ele, 1):
+                if (idx not in seen) and (grid[ele] == grid[idx]):
+                    seen.add(idx)
+                    queue.append(idx)
+                    nhood_size += 1
+        # add to dictionary
+        ret[grid[ele]].append(nhood_size)
+    return ret
+
+
+
 
 def main():
     # RUN YOUR SIMULATION HERE
