@@ -2,11 +2,13 @@ import numpy as np
 import itertools
 
 
+''' Initializing parameters'''
 n = 8 # this is n, grid size (nxnx...xn), d times
 d = 3 # this is d, number of dimensions (d<=10) 
 v = 1 # this is v Note: if v=1, then we care about 3x3 squares
 m = 2 # this is m, number of types; type 1,2,...,m
-popdist = np.array([0.6, 0.4]) # proportion of each type
+
+popdist = np.array([0.6, 0.4]) # proportion of each type, changes with m
 rho = 0.8 # this is rho, population density
 
 # m x m matrices
@@ -14,9 +16,10 @@ lo_thres = np.matrix([[0.33,0.],[0.,0.33]])
 hi_thres = np.matrix([[1,1],[1,1]])
 
 # number of iterations
-max_iter = 200
+max_iter = 500
 
 
+''' Setting up the model '''
 # construct a grid
 def gridinit():
     assert len(popdist) == m
@@ -107,7 +110,23 @@ def neighborhood_sizes(grid):
 def printgrid(grid):
     print grid.reshape((n,)*d)
 
+# calculates segregation based on average size
+def calc_seg(grid,nhoodsize=1):
+	segcoeff = np.array([])
+	for pos in xrange(len(grid)):
+		curr_type = grid[pos]
+		neighbors = grid[getneighbors(pos,nhoodsize)]
+		neighbors = neighbors[neighbors > 0]
+		if curr_type == 0:
+			segcoeff = np.append(segcoeff,[-1])
+		elif len(neighbors) == 0:
+			segcoeff = np.append(segcoeff,[1])
+		else:
+			ratio = sum(neighbors==curr_type)*1./len(neighbors)
+			segcoeff = np.append(segcoeff,[ratio])
+	return np.mean(segcoeff[segcoeff>-1])
 
+''' Running the model '''
 def example():
     # example, we track number of unhappy people
     # with n=10,d=2,m=2,v=1,lo_thres=diag(0.33) i.e. want at least 1/3 own,hi_thres=all ones (not binding)
@@ -124,6 +143,8 @@ def example():
     # [0 0 0 0 0 0 2 0]]
     # which is completely segregated
     results = [gridinit()]
+    print "Initial Grid:"
+    printgrid(results[0])
     unhappy_list = []
     for cnt in xrange(max_iter):
         oldgrid = results[cnt]
@@ -133,27 +154,14 @@ def example():
             results.append(newgrid)
             cnt += 1
         else:
+            print max_iter
             break
+    print "Final Grid:"
+    printgrid(results[-1])
+    print "Neighborhood Sizes:"
     print neighborhood_sizes(results[-1])
-
-def neighborhood_sizes(grid):
-    seen = set()
-    ret = {t: [] for t in xrange(m+1)}
-    while len(seen) != len(grid):
-        x = set(range(len(grid))) - seen        
-        queue = [list(x)[0]]
-        seen.add(queue[0])
-        nhood_size = 1
-        while len(queue) > 0:
-            ele = queue.pop()
-            for idx in getneighbors(ele, 1):
-                if (idx not in seen) and (grid[ele] == grid[idx]):
-                    seen.add(idx)
-                    queue.append(idx)
-                    nhood_size += 1
-        # add to dictionary
-        ret[grid[ele]].append(nhood_size)
-    return ret
+    print "Segregation Coefficient:"
+    print("%.4f" % calc_seg(results[-1]))
 
 
 
