@@ -25,15 +25,21 @@ max_iter = 200
 # Number of unhappy people over time 
 def unhappiness_over_time():
     unhappy_iterations = {}
-    lowest = 2; highest = 8
+    lowest = 2; highest = 4
     for i in range(lowest,highest + 1):
         m = i
         popdist = np.ones(m)/m
-        results = [gridinit()]
+        lo_thres = [[0]*m for s in range(m)]
+        for r in range(len(lo_thres)):
+            lo_thres[r][r] = 0.33
+        lo_thres = np.matrix(lo_thres)
+        hi_thres = [[1]*m for s in range(m)]
+        hi_thres = np.matrix(hi_thres)
+        results = [gridinit(popdist,rho, n=20, d = 2, m = m)]
         unhappy_list = []
         for cnt in xrange(max_iter):
             oldgrid = results[cnt]
-            num_unhappy, newgrid = movegrid(oldgrid)
+            num_unhappy, newgrid = movegrid(oldgrid, n=20, d=2, v=1,m=m, hi_thres=hi_thres,lo_thres = lo_thres)
             if num_unhappy > 0:
                 unhappy_list.append(num_unhappy)
                 results.append(newgrid)
@@ -54,20 +60,25 @@ def unhappiness_over_time():
 
 # Number of unhappy people over time 
 def iterations_to_completion():
+    num_iterations = {}
     lowest = 2; highest = 8
     repetitions = 5
-    num_iterations = {}
-    for j in range(lowest, highest + 1):
-        num_iterations[j] = []
-    for s in range(repetitions):
-        for i in range(lowest,highest + 1):
-            m = i
-            popdist = np.ones(m)/m
-            results = [gridinit()]
+    for i in range(lowest,highest + 1):
+        num_iterations[i] = []
+        m = i
+        popdist = np.ones(m)/m
+        lo_thres = [[0]*m for s in range(m)]
+        for r in range(len(lo_thres)):
+            lo_thres[r][r] = 0.33
+        lo_thres = np.matrix(lo_thres)
+        hi_thres = [[1]*m for s in range(m)]
+        hi_thres = np.matrix(hi_thres) 
+        for j in range(repetitions): 
+            results = [gridinit(popdist,rho, n=20, d = 2, m = m)]
             unhappy_list = []
             for cnt in xrange(max_iter):
                 oldgrid = results[cnt]
-                num_unhappy, newgrid = movegrid(oldgrid)
+                num_unhappy, newgrid = movegrid(oldgrid, n=20, d=2, v=1,m=m, hi_thres=hi_thres,lo_thres = lo_thres)
                 if num_unhappy > 0:
                     unhappy_list.append(num_unhappy)
                     results.append(newgrid)
@@ -87,12 +98,15 @@ def iterations_to_completion():
         plt.scatter([key] * repetitions, num_iterations[key], color = colors[color_count], label=key)
         color_count += 1
         plt.scatter(key, np.average(num_iterations[key]), color = "black", s=40)
-    plt.legend()
+    plt.legend(loc=2)
     plt.show()
 
 
 def main():
     # RUN YOUR SIMULATION HERE
+
+    #unhappiness_over_time()
+
     iterations_to_completion()
 
 
