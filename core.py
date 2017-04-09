@@ -10,7 +10,10 @@ def gridinit(popdist,rho,n=10,d=2,m=2):
     return grid
 
 def pos_int2arr(pos,n=10,d=2):
-    posarr = [int(x) for x in np.base_repr(pos,base=n)]
+    posarr = []
+    while pos>0:
+        posarr.insert(0,pos%n)
+        pos = pos/n
     posarr = np.array([0]*(d-len(posarr)) + posarr)
     return posarr
     
@@ -145,8 +148,8 @@ def run(n=10,d=2,v=1,m=2,popdist=np.array([0.6, 0.4]),rho=0.8,lo_thres=np.matrix
 def main():
     # RUN YOUR SIMULATION HERE
     ''' Initializing parameters'''
-    n = 8 # this is n, grid size (nxnx...xn), d times
-    d = 3 # this is d, number of dimensions (d<=10) 
+    n = 11 # this is n, grid size (nxnx...xn), d times
+    d = 2 # this is d, number of dimensions (d<=10) 
     v = 1 # this is vision Note: if v=1, then we care about 3x3 squares
     m = 2 # this is m, number of types; type 1,2,...,m
 
@@ -160,7 +163,7 @@ def main():
     # number of iterations
     max_iter = 200
 
-    [results,segcoeffs,unhappy_list] = run()
+    [results,segcoeffs,unhappy_list] = run(n=11)
 
     print "Initial Grid:"
     printgrid(results[0],n,d)
