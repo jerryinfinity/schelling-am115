@@ -12,21 +12,22 @@ import core
 
 ### varying v ###
 ds = [1,2,3]
-trials = 3
+trials = 20
 results_list = []
 segcoeffs_list = []
 unhappys_list = []
 trial_num = []
-print "Number of trials for each d:",trials
+print "Number of trials for each v:",trials
 for d in ds:
 	for t in range(trials):
-		trial_num.append(d+t/10.)
+		trial_num.append(d+t*1./trials)
 		[results,segcoeffs,unhappys] = core.run(n=20,v=d)
 		while len(unhappys)==200:
 			[results,segcoeffs,unhappys] = core.run(n=20,v=d)
 		results_list.append(results)
 		segcoeffs_list.append(segcoeffs)
 		unhappys_list.append(unhappys)
+		print '%.2f' % trial_num[-1]
 
 print "Number of steps until equilibrium"
 unhappys_len = [len(unhappys_list[i]) for i in range(len(unhappys_list))]
@@ -54,7 +55,6 @@ for d in range(len(ds)):
 	for t in range(trials):
 		i = trials*d+t
 		plt.plot(unhappys_list[i],label=trial_num[i],c=colors[d])
-plt.show()
 plt.savefig("unhappyvtime_v.png")
 
 # Plotting segregation over time for various values of v
@@ -66,7 +66,6 @@ for d in range(len(ds)):
 	for t in range(trials):
 		i = trials*d+t
 		plt.plot(segcoeffs_list[i],label=trial_num[i],c=colors[d])
-plt.show()
 plt.savefig("segvtime_v.png")
 
 # Plotting number of steps until equilibrium against v
@@ -77,7 +76,6 @@ plt.ylabel("Steps until equilibrium")
 plt.title("Steps until equilibrium over v")
 plt.errorbar(ds,unhappys_mean,yerr=unhappys_std,fmt='-o')
 plt.xlim(0,ds[-1]+ds[0])
-plt.show()
 plt.savefig("stepsvv.png")
 
 # Plotting segregation at equilibrium against v
@@ -87,7 +85,6 @@ plt.ylabel("Segregation Coefficient")
 plt.title("Segregation coefficient over v")
 plt.errorbar(ds,seg_mean,yerr=seg_std,fmt='-o')
 plt.xlim(0,ds[-1]+ds[0])
-plt.show()
 plt.savefig("segvv.png")
 
 

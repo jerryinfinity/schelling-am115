@@ -20,13 +20,14 @@ trial_num = []
 print "Number of trials for each n:",trials
 for n in ns:
 	for t in range(trials):
-		trial_num.append(n+t/10.)
+		trial_num.append(n+t*1./trials)
 		[results,segcoeffs,unhappys] = core.run(n=n,max_iter=50)
 		while len(unhappys)==50:
 			[results,segcoeffs,unhappys] = core.run(n=n,max_iter=50)
 		results_list.append(results)
 		segcoeffs_list.append(segcoeffs)
 		unhappys_list.append(unhappys)
+		print '%.2f' % trial_num[-1]
 
 print "Number of steps until equilibrium"
 unhappys_len = [len(unhappys_list[i]) for i in range(len(unhappys_list))]
@@ -54,8 +55,7 @@ for n in range(len(ns)):
 	for t in range(trials):
 		i = trials*n+t
 		plt.plot(unhappys_list[i],label=trial_num[i],c=colors[n])
-plt.show()
-plt.savefig("unhappyvtime.png")
+plt.savefig("unhappyvtime_n.png")
 
 # Plotting segregation over time for various values of n
 plt.figure(2)
@@ -66,8 +66,7 @@ for n in range(len(ns)):
 	for t in range(trials):
 		i = trials*n+t
 		plt.plot(segcoeffs_list[i],label=trial_num[i],c=colors[n])
-plt.show()
-plt.savefig("segvtime.png")
+plt.savefig("segvtime_n.png")
 
 # Plotting number of steps until equilibrium against n
 
@@ -77,7 +76,6 @@ plt.ylabel("Steps until equilibrium")
 plt.title("Steps until equilibrium over n")
 plt.errorbar(ns,unhappys_mean,yerr=unhappys_std,fmt='-o')
 plt.xlim(0,ns[-1]+ns[0])
-plt.show()
 plt.savefig("stepsvn.png")
 
 # Plotting segregation at equilibrium against n
@@ -87,7 +85,6 @@ plt.ylabel("Segregation Coefficient")
 plt.title("Segregation coefficient over n")
 plt.errorbar(ns,seg_mean,yerr=seg_std,fmt='-o')
 plt.xlim(0,ns[-1]+ns[0])
-plt.show()
 plt.savefig("segvn.png")
 
 
